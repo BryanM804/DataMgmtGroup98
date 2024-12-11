@@ -7,6 +7,14 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="./styles/midStyle.css" />
 	<title>Customer Reservations</title>
+	<%
+		// Get the username from the session, set by checkCredentials
+		String susername = (String)session.getAttribute("username");
+	
+		if (susername == null) {
+			response.sendRedirect("login.jsp");
+		}
+	%>
 </head>
 <body>
 <div class="marginDiv">
@@ -46,14 +54,14 @@
 		String date = request.getParameter("date") == null ? "" : request.getParameter("date");
 		
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT date, username, passenger, type, total, sc.linename\n");
-		query.append("FROM trainsdb.reservation r, trainsdb.schedule sc\n");
-		query.append("WHERE r.scid = sc.scid\n");
+		query.append("SELECT date, r.username, passenger, type, total, sc.linename\n");
+		query.append("FROM trainsdb.reservation r, trainsdb.schedule sc, trainsdb.customer c\n");
+		query.append("WHERE r.scid = sc.scid AND r.username = c.username\n");
 		if (tLine.equals("") && customer.equals("") && date.equals("")) {
 			query.append(";");
 		} else {
 			query.append("AND ");
-			String[] names = {"r.date", "r.passenger", "sc.linename"};
+			String[] names = {"r.date", "c.fname", "sc.linename"};
 			String[] params = {date, customer, tLine};
 			int populatedFields = 0;
 			for (String s : params) {

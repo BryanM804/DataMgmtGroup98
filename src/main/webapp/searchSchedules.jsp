@@ -7,6 +7,14 @@
 	<meta charset="UTF-8">
 	<title>Search Scheduled Trains</title>
 	<link rel="stylesheet" href="./styles/midStyle.css" />
+	<%
+		// Get the username from the session, set by checkCredentials
+		String susername = (String)session.getAttribute("username");
+	
+		if (susername == null) {
+			response.sendRedirect("login.jsp");
+		}
+	%>
 </head>
 <body>
 <script type="text/javascript">
@@ -59,6 +67,7 @@
 	<input type="hidden" name="origin" value="<%=request.getParameter("origin") %>" />
 	<input type="hidden" name="destination" value="<%=request.getParameter("destination") %>" />
 	<input type="hidden" name="date" value="<%=request.getParameter("date") %>" />
+	<input type="hidden" name="station" value="<%=request.getParameter("station") %>" />
 	Sort By:<br>
 	<label for="arrivalRadio">Arrival Time</label>
 	<input id="arrivalRadio" type="radio" name="sortby" onclick="submitSort()" value="arrival" />
@@ -101,14 +110,14 @@
 			StringBuilder query = new StringBuilder();
 	
 			query.append("SELECT linename, departure, arrival, travel, origin, dest, fare, tid, scid ");
-			query.append("FROM trainsdb.schedule");
+			query.append("FROM trainsdb.schedule\n");
+			query.append("WHERE DATE(departure) >='"+LocalDate.now()+"'\n");
 			if (origin.equals("") && dest.equals("") && date.equals("")) {
 				if (!sortby.equals("")) {
 					query.append(" ORDER BY "+sortby+" DESC");
 				}
 				query.append(";");
 			} else {
-				query.append(" WHERE ");
 				int populatedFields = 0;
 				for (String s : params) {
 					populatedFields = s.equals("") ? populatedFields : populatedFields + 1;
@@ -171,7 +180,7 @@
 						
 						out.print("<option value=\""+scid+"\" title=\""+stopString+"\">"+stName+"</option>");
 					}
-					out.print("</select><input type=\"submit\" value=\"Make Reservation\" class=\"defaultButton\"/></form>");
+					out.print("</select><br><input type=\"submit\" value=\"Make Reservation\" class=\"defaultButton\"/></form>");
 					out.print("</tr>");	
 				} while(results.next());
 			}
@@ -180,10 +189,17 @@
 			StringBuilder repQ = new StringBuilder();
 			
 			String station = request.getParameter("station");
+			String sortby = request.getParameter("sortby") == null ? "" : request.getParameter("sortby");
 			
 			repQ.append("SELECT linename, departure, arrival, travel, origin, dest, fare, tid, scid\n");
 			repQ.append("FROM trainsdb.schedule\n");
-			repQ.append("WHERE origin='"+station+"' OR dest='"+station+"';");
+			repQ.append("WHERE origin='"+station+"' OR dest='"+station+"'");
+			
+			if (!sortby.equals("")) {
+				repQ.append(" ORDER BY "+sortby+" DESC;");
+			} else {
+				repQ.append(";");
+			}
 			
 			ResultSet res = stmt.executeQuery(repQ.toString());
 			ResultSetMetaData rsmd = res.getMetaData();

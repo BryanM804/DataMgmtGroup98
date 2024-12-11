@@ -7,6 +7,14 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./styles/midStyle.css" />
 <title>Questions</title>
+<%
+	// Get the username from the session, set by checkCredentials
+	String susername = (String)session.getAttribute("username");
+
+	if (susername == null) {
+		response.sendRedirect("login.jsp");
+	}
+%>
 </head>
 <body>
 <div class="marginDiv">
@@ -59,7 +67,7 @@
 			
 			ResultSet replies = replyStmt.executeQuery(replyQuery.toString());
 			while (replies.next()) {
-				out.print("<div class=\"replyDiv\"><h5>"+replies.getString("e.username")+"</h5>"+replies.getString("txt")+"</div>");
+				out.print("<div style=\"margin-left: 50px\"><h5>"+replies.getString("e.username")+"</h5>"+replies.getString("txt")+"</div>");
 			}
 		}
 		

@@ -7,6 +7,14 @@
 	<meta charset="UTF-8">
 	<title>Loading...</title>
 	<link rel="stylesheet" href="./styles/midStyle.css" />
+	<%
+		// Get the username from the session, set by checkCredentials
+		String susername = (String)session.getAttribute("username");
+	
+		if (susername == null) {
+			response.sendRedirect("login.jsp");
+		}
+	%>
 </head>
 <body>
 	<%
@@ -35,7 +43,7 @@
 		int affectedRows = stmt.executeUpdate(q.toString());
 		
 		if (affectedRows >= 1) {
-			session.setAttribute("reservationCreated", true);
+			session.setAttribute("reservationCreated", "true");
 			response.sendRedirect("welcome.jsp");
 		} else {
 			throw new Exception("Unable to create reservation");

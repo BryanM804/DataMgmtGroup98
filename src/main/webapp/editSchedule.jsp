@@ -6,6 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Loading...</title>
+<%
+	// Get the username from the session, set by checkCredentials
+	String susername = (String)session.getAttribute("username");
+
+	if (susername == null) {
+		response.sendRedirect("login.jsp");
+	}
+%>
 </head>
 <body>
 	<%
@@ -14,11 +22,12 @@
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
 		
-		String q = "SELECT DATE(departure) d, TIME(departure) dt, TIME(arrival) at FROM trainsdb.schedule WHERE scid="+request.getParameter("scid")+";";
+		String q = "SELECT DATE(departure) dd, DATE(arrival) ad, TIME(departure) dt, TIME(arrival) at FROM trainsdb.schedule WHERE scid="+request.getParameter("scid")+";";
 		ResultSet res = stmt.executeQuery(q);
 		res.next();
 		
-		String date = res.getString("d");
+		String ddate = res.getString("dd");
+		String adate = res.getString("ad");
 		String departTime = res.getString("dt");
 		String arrivalTime = res.getString("at");
 		
@@ -29,17 +38,26 @@
 		
 		for (int i = 0; i < attrs.length; i++) {
 			String attr = request.getParameter(attrs[i]);
-			if (attr != null && !attr.equals("")) {
+			if (attr != null && !attr.equals("") && !attrs[i].startsWith("departure") && !attrs[i].startsWith("arrival")) {
 				query.append(attrs[i]+"='"+attr+"',");
 			} else if (attrs[i].startsWith("departure") || attrs[i].startsWith("arrival")) {
 				if (!request.getParameter(attrs[i]+"Date").equals("")) {
-					date = request.getParameter(attrs[i]+"Date");
+					if (attrs[i].equals("departure"))
+						ddate = request.getParameter(attrs[i]+"Date");
+					else
+						adate = request.getParameter(attrs[i]+"Date");
 				}
+				
 				if (request.getParameter(attrs[i]).equals("")) {
 					if (attrs[i].equals("departure"))
-						attr = date+" "+departTime;
+						attr = ddate+" "+departTime;
 					else
-						attr = date+" "+arrivalTime;
+						attr = adate+" "+arrivalTime;
+				} else {
+					if (attrs[i].equals("departure"))
+						attr = ddate+" "+request.getParameter(attrs[i])+":00";
+					else
+						attr = adate+" "+request.getParameter(attrs[i])+":00";
 				}
 				query.append(attrs[i]+"='"+attr+"',");
 			}

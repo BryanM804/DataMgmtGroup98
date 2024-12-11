@@ -14,12 +14,14 @@
 			document.getElementById("registrationForm").style.visibility = "visible";
 			document.getElementById("createAccount").style.visibility = "hidden";
 		}
-		function checkPasswordMatch() {
+		function checkPasswordMatch(e) {
 			let passInput = document.getElementById("newPassword").value;
 			let confirmation = document.getElementById("confirmPassword").value;
 			
 			if (passInput != confirmation) {
 				document.getElementById("warningText").style.visibility = "visible";
+				if (e)
+					e.preventDefault();
 			} else {
 				document.getElementById("warningText").style.visibility = "hidden";
 			}
@@ -52,7 +54,7 @@
 	<br>
 	<br>
 	<button id="createAccount" onclick="showRegistration()" class="defaultButton">Create new account</button>
-	<form action="registerAccount.jsp" method="post" id="registrationForm" style="visibility: hidden">
+	<form action="registerAccount.jsp" method="post" id="registrationForm" style="visibility: hidden" onsubmit="checkPasswordMatch(event)">
 		<h2>Register</h2>
 		First<br>
 		<input type="text" name="firstName" class="inputField" placeholder="First Name" required /> <br>

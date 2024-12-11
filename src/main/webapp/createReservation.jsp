@@ -8,6 +8,15 @@
 	<title>Create Reservation</title>
 	<link rel="stylesheet" href="./styles/midStyle.css" />
 	<%
+		// Get the username from the session, set by checkCredentials
+		String susername = (String)session.getAttribute("username");
+	
+		if (susername == null) {
+			response.sendRedirect("login.jsp");
+		}
+	%>
+	
+	<%
 		String scid = request.getParameter("scid");
 	
 		ApplicationDB db = new ApplicationDB();

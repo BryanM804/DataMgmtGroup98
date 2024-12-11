@@ -7,6 +7,14 @@
 	<meta charset="UTF-8">
 	<title>Customer Representative</title>
 	<link rel="stylesheet" href="./styles/midStyle.css" />
+	<%
+		// Get the username from the session, set by checkCredentials
+		String susername = (String)session.getAttribute("username");
+	
+		if (susername == null) {
+			response.sendRedirect("login.jsp");
+		}
+	%>
 </head>
 <body>
 <%
@@ -32,7 +40,7 @@
 	
 	<h4>Station Schedules</h4>
 	<form action="searchSchedules.jsp" >
-		Station:
+		Origin/Destination:
 		<select name="station">
 			<%
 				String q = "SELECT name FROM trainsdb.station;";

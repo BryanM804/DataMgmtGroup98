@@ -15,10 +15,12 @@
 		String username = (String)session.getAttribute("username");
 		
 		String reservationCanceled = (String)session.getAttribute("reservationCanceled");
+		String reservationCreated = (String)session.getAttribute("reservationCreated");
 	%>
 	<script type="text/javascript">
 		const invalid = "<%=username %>";
 		const reservationCanceled = "<%=reservationCanceled %>";
+		const reservationCreated = "<%=reservationCreated %>"
 		
 		if (invalid == "null") {
 			alert("Invalid Session.");
@@ -26,10 +28,14 @@
 		if (reservationCanceled != "null") {
 			alert("Reservation #"+reservationCanceled+" canceled.");
 		}
+		if (reservationCreated != "null") {
+			alert("Reservation created!");
+		}
 	</script>
 	
 	<%
 		session.removeAttribute("reservationCanceled");
+		session.removeAttribute("reservationCreated");
 	
 		// If there is no username the session is invalid
 		if (username == null) {

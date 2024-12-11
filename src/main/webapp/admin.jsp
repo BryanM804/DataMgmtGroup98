@@ -9,9 +9,9 @@
 	<link rel="stylesheet" href="./styles/midStyle.css" />
 	<%
 		// Get the username from the session, set by checkCredentials
-		String username = (String)session.getAttribute("username");
+		String susername = (String)session.getAttribute("username");
 	
-		if (username == null) {
+		if (susername == null) {
 			response.sendRedirect("login.jsp");
 		}
 	%>
@@ -62,11 +62,21 @@
 		ApplicationDB db = new ApplicationDB();
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
-	%>
+	
+		String year = request.getParameter("year") != null ? request.getParameter("year") : "2024";
+		
+		StringBuilder reportQ = new StringBuilder();
+		reportQ.append("SELECT MONTH(date) m, SUM(total) s\n");
+		reportQ.append("FROM trainsdb.reservation\n");
+		reportQ.append("WHERE YEAR(date)="+year+"\n");
+		reportQ.append("GROUP BY MONTH(date);");
+			
+	%>	
 	
 	<h3>Sales Report</h3>
 	<form action="admin.jsp" id="yearSelect">
-		<select name="year" onchange="() => {document.getElementById('yearSelect').submit();}">
+		<select name="year" onchange="document.getElementById('yearSelect').submit();">
+			<option>Year</option>
 			<%
 				String yearsQ = "SELECT DISTINCT YEAR(date) y FROM trainsdb.reservation;";
 				ResultSet years = stmt.executeQuery(yearsQ);
@@ -77,25 +87,14 @@
 			%>
 		</select>
 	</form>
-	
-	<%
-		String year = request.getParameter("year") != null ? request.getParameter("year") : "2024";
-		
-		StringBuilder reportQ = new StringBuilder();
-		reportQ.append("SELECT MONTH(date) m, SUM(total) s\n");
-		reportQ.append("FROM trainsdb.reservation\n");
-		reportQ.append("WHERE YEAR(date)="+year+"\n");
-		reportQ.append("GROUP BY MONTH(date);");
-		
-		ResultSet salesReport = stmt.executeQuery(reportQ.toString());
-		
-	%>	
 	<table>
 		<tr>
 			<th>Month&emsp;</th>
 			<th>Revenue</th>
 		</tr>
 		<%
+			ResultSet salesReport = stmt.executeQuery(reportQ.toString());
+		
 			while (salesReport.next()) {
 				float total = ((int) ((salesReport.getFloat("s") + 0.005f) * 100)) / 100f;
 				
@@ -133,9 +132,11 @@
 		ResultSet linesRev = stmt.executeQuery(revQ.toString());
 		
 		while(linesRev.next()) {
+			float sum = ((int) ((linesRev.getFloat("sum") + 0.005f) * 100)) / 100f;
+			
 			out.print("<tr>");
 			out.print("<td>"+linesRev.getString("linename")+"&emsp;</td>");
-			out.print("<td>"+linesRev.getString("sum")+"</td>");
+			out.print("<td>"+sum+"</td>");
 			out.print("</tr>");
 		}
 		
@@ -153,7 +154,7 @@
 		custRev.append("SELECT c.fname, c.lname, SUM(r.total) sum\n");
 		custRev.append("FROM trainsdb.customer c, trainsdb.reservation r\n");
 		custRev.append("WHERE c.username=r.username\n");
-		custRev.append("GROUP BY c.fname, c.lname ORDER BY sum DESC;");
+		custRev.append("GROUP BY r.username ORDER BY sum DESC;");
 		
 		ResultSet custRevRes = stmt.executeQuery(custRev.toString());
 		
@@ -181,7 +182,7 @@
 		query.append("SELECT c.fname, c.lname, SUM(r.total) sum\n");
 		query.append("FROM trainsdb.customer c, trainsdb.reservation r\n");
 		query.append("WHERE c.username=r.username\n");
-		query.append("GROUP BY c.fname, c.lname ORDER BY sum DESC;");
+		query.append("GROUP BY c.username ORDER BY sum DESC;");
 		
 		ResultSet res = stmt.executeQuery(query.toString());
 		res.next();
@@ -206,7 +207,7 @@
 		
 		int i = 1;
 		while(res.next()) {
-			out.print(i+". "+res.getString("linename")+": "+res.getString("c")+" reservations");
+			out.print(i+". "+res.getString("linename")+": "+res.getString("c")+" reservations<br>");
 			i++;
 		}
 		

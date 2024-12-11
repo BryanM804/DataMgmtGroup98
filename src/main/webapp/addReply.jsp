@@ -6,6 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Loading...</title>
+<%
+	// Get the username from the session, set by checkCredentials
+	String susername = (String)session.getAttribute("username");
+
+	if (susername == null) {
+		response.sendRedirect("login.jsp");
+	}
+%>
 </head>
 <body>
 	<%
