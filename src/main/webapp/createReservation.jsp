@@ -21,6 +21,9 @@
 		fareRes.next();
 		
 		float fare = fareRes.getFloat("fare");
+		
+		fstmt.close();
+		fareRes.close();
 	%>
 	<script type="text/javascript">
 		let fare = <%=fare%>;
@@ -174,6 +177,8 @@ Please include a passenger name and check any boxes for applicable discounts.</p
 		// Should probably check if next() is successful but if it's not we have bigger problems anyway
 		res.next();
 		out.print(res.getString("tid"));
+		res.close();
+		con.close();
 	%>
 	</div>
 	<div style="text-decoration: underline">Total:</div> <div id="resTotal">$0</div>

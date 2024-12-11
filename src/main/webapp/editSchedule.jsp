@@ -55,6 +55,10 @@
 		} else {
 			response.sendRedirect("customerRep.jsp");
 		} 
+		
+		con.close();
+		res.close();
+		stmt.close();
 	%>
 </body>
 </html>

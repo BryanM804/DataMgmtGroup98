@@ -61,6 +61,9 @@
 			}
 			
 			db.closeConnection(con);
+			empRes.close();
+			usrRes.close();
+			stmt.close();
 		} catch (Exception e) {
 			out.print(e);
 		}

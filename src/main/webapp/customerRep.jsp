@@ -26,13 +26,8 @@
 		%>
 	
 	<h4>Customer Q&A</h4>
-	<h5>Search:</h5>
-	<form action="searchQnA.jsp" >
-		Question:
-		<input type="text" name="question" class="inputField" />
-		Answer:
-		<input type="text" name="answer" class="inputField" />
-		<input type="submit" value="Search" class="defaultButton" />
+	<form action="viewQuestions.jsp" >
+		<input type="submit" class="defaultButton" value="View Customer Questions" />
 	</form>
 	
 	<h4>Station Schedules</h4>
@@ -61,6 +56,10 @@
 				while (res.next()) {
 					out.print("<option value=\""+res.getString("linename")+"\">"+res.getString("linename")+"</option>");
 				}
+				
+				con.close();
+				stmt.close();
+				res.close();
 			%>
 		</select>
 		Date

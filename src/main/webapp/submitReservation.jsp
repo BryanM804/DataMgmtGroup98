@@ -40,6 +40,10 @@
 		} else {
 			throw new Exception("Unable to create reservation");
 		}
+		
+		con.close();
+		stmt.close();
+		res.close();
 	%>
 </body>
 </html>

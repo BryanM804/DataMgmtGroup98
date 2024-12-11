@@ -96,6 +96,8 @@
 			while (results.next()) {
 				out.print("<tr>");
 				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					if (rsmd.getColumnName(i).equals("resnum"))
+						continue;
 				 	out.print("<td>"+results.getString(rsmd.getColumnName(i))+"</td>");
 				}
 				out.print("</tr>");
@@ -145,6 +147,10 @@
 					String o = results.getString("DATE(departure)");
 					out.print("<option value=\""+o+"\">"+o+"</option>");
 				}
+				
+				con.close();
+				results.close();
+				stmt.close();
 			%>
 		</select>
 		<input type="submit" value="Search" class="defaultButton" />
@@ -156,7 +162,9 @@
 		<input type="submit" class="defaultButton" />
 	</form>
 	<form action="viewQuestions.jsp">
-		<input type="submit" class="defaultButton" value="View Questions" />
+		<input type="text" name="keyword" class="inputField" placeholder="Keyword"/>
+		<input type="submit" value="Search by Keyword" class="defaultButton" /><br>
+		<input type="submit" class="defaultButton" value="View All Questions" />
 	</form>
 	
 	<br>

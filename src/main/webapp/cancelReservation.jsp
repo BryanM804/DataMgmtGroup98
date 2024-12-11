@@ -28,6 +28,9 @@
 			
 			response.sendRedirect("welcome.jsp");
 		}
+		
+		con.close();
+		stmt.close();
 	%>
 </body>
 </html>

@@ -20,6 +20,9 @@
 		} else {
 			response.sendRedirect("customerRep.jsp");
 		}
+		
+		con.close();
+		stmt.close();
 	%>
 </body>
 </html>

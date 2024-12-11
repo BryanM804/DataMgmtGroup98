@@ -36,6 +36,10 @@
 				session.setAttribute("repChanged", ssn);
 				response.sendRedirect("admin.jsp");
 			}
+			
+			con.close();
+			stmnt.close();
+			
 		} catch (Exception e) {
 			out.print(e);
 		}

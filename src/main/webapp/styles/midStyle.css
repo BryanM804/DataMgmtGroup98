@@ -20,6 +20,9 @@
 	padding: 6px;
 	border-radius: 15px;
 }
+.replyDiv {
+	margin-left: 100px;	
+}
 body {
 	font-family: "Arial";
 }

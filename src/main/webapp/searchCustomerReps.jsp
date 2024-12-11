@@ -71,6 +71,10 @@
 			out.print("</form></td>");
 			out.print("</tr>");
 		}
+		
+		con.close();
+		stmnt.close();
+		results.close();
 	%>
 	</table>
 	<form action="editRep.jsp" method="post" id="editForm" style="visibility: hidden">

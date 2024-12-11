@@ -47,6 +47,8 @@
 			}
 			
 			db.closeConnection(con);
+			res.close();
+			stmt.close();
 		} catch (Exception e) {
 			out.print(e);
 		}

@@ -26,6 +26,9 @@
 		} else {
 			throw new Exception("Unable to delete customer rep");
 		}
+		
+		con.close();
+		stmt.close();
 	%>
 </body>
 </html>

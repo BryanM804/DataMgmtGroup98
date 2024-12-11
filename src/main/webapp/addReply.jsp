@@ -10,8 +10,9 @@
 <body>
 	<%
 		String username = (String)session.getAttribute("username");
+		String type = (String)session.getAttribute("type");
 		
-		if (username == null) {
+		if (username == null || type == null || !type.equals("customerRep")) {
 			response.sendRedirect("login.jsp");
 		}
 		
@@ -19,18 +20,24 @@
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
 		
-		String q = "INSERT INTO trainsdb.question (username, txt) VALUES ('"+username+"', '"+request.getParameter("question")+"');";
+		String ssnQ = "SELECT ssn FROM trainsdb.employee WHERE username='"+username+"';";
+		ResultSet ssns = stmt.executeQuery(ssnQ);
+		ssns.next();
+		String ssn = ssns.getString("ssn");
+		
+		String q = "INSERT INTO trainsdb.reply (txt, ssn, qid) VALUES ('"+request.getParameter("reply")+"', "+ssn+", "+request.getParameter("qid")+");";
 		
 		int affectedRows = stmt.executeUpdate(q);
 		
 		if (affectedRows < 1) {
-			throw new Exception("Could not add question.");
+			throw new Exception("Could not add reply.");
 		} else {
 			response.sendRedirect("viewQuestions.jsp");
 		}
 		
 		con.close();
 		stmt.close();
+		ssns.close();
 	%>
 </body>
 </html>

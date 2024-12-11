@@ -175,6 +175,7 @@
 					out.print("</tr>");	
 				} while(results.next());
 			}
+			results.close();
 		} else if (type.equals("customerRep")) {
 			StringBuilder repQ = new StringBuilder();
 			
@@ -197,6 +198,8 @@
 				out.print("<input type=\"hidden\" name=\"scid\" value=\""+res.getString("scid")+"\" /></form></td>");
 				out.print("</tr>");
 			}
+			
+			res.close();
 		}
 		%>
 	</table>
@@ -254,6 +257,10 @@
 				while (res.next()) {
 					out.print("<option value=\""+res.getString("tid")+"\">"+res.getString("tid")+"</option>");
 				}
+				
+				con.close();
+				stmt.close();
+				res.close();
 			%>
 		</select>
 		</td>

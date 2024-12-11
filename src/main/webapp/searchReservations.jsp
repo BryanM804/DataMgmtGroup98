@@ -90,6 +90,10 @@
 			out.print("</table>No reservations found.");
 		}
 		out.print("</table>");
+		
+		con.close();
+		stmt.close();
+		reservations.close();
 	%>
 </div>
 </body>

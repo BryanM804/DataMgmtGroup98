@@ -32,6 +32,9 @@
 				session.setAttribute("repAdded", username);
 				response.sendRedirect("admin.jsp");
 			}
+			
+			con.close();
+			stmnt.close();
 		} catch (Exception e) {
 			out.print(e);
 		}

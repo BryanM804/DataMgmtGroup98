@@ -104,6 +104,8 @@
 				out.print("<td>$"+total+"</td>");
 				out.print("</tr>");
 			}
+		
+			salesReport.close();
 		%>
 	</table>
 	
@@ -136,6 +138,8 @@
 			out.print("<td>"+linesRev.getString("sum")+"</td>");
 			out.print("</tr>");
 		}
+		
+		linesRev.close();
 	%>
 	</table>
 	<h4>Per Customer</h4>
@@ -163,6 +167,8 @@
 			out.print("<td>"+sum+"</td>");
 			out.print("</tr>");
 		}
+		
+		custRevRes.close();
 	%>
 	</table>
 	
@@ -203,6 +209,10 @@
 			out.print(i+". "+res.getString("linename")+": "+res.getString("c")+" reservations");
 			i++;
 		}
+		
+		res.close();
+		con.close();
+		stmt.close();
 	%>
 	<br>
 	<br>
